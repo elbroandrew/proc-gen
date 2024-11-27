@@ -2,12 +2,10 @@ import numpy as np
 import cv2 as cv
 from math import floor
 from PIL import Image
-from collections import namedtuple
+from undirected_graph import UndirectedGraph
 
 
 img_size=512
-# create a black image
-# img = np.zeros((img_size,img_size), np.uint8)
 img1 = Image.new('RGB', (img_size, img_size), (0, 0, 0))
 img = cv.cvtColor(np.array(img1), cv.COLOR_BGR2RGB)
 rows=cols=16
@@ -50,7 +48,8 @@ class CoordinateStore:
         return floor(xx/dx), floor(yy/dy)
 
 class Room:
-    def __init__(self, img, x, y, size, offset=6):
+    def __init__(self, img, x, y, size, offset=6, id=0):
+        self.id = id
         self.x = x
         self.y = y
         s=int(size)
@@ -61,29 +60,16 @@ class Room:
                      (self.xx+s-offset, self.yy+s-offset), 
                      (70, 150, 150), -1)
         
-    # def draw_room(self, img, size):
-    #     s=int(size)
-    #     offset=6
-    #     self.x *= s
-    #     self.y *= s
-    #     cv.rectangle(img, 
-    #                  (self.x+offset, self.y+offset), 
-    #                  (self.x+s-offset, self.y+s-offset), 
-    #                  (70, 150, 150), -1)
     
 
 def draw_corridor(img, room1, room2, size, length=8):
     # the corridor connects exactly only 2 rooms
     s=int(size)
     x = room1.x * s
-    print(room1.x)
     y = room1.y * s
     cx = x + s//2
     cy = y + s//2
-    x2 = room2.x * s
-    y2 = room2.y * s
-    cx2 = x2 + s//2
-    cy2 = y2 + s//2
+    
     if room1.x == room2.x:
         # draw vertical
         if room2.y > room1.y:
@@ -104,16 +90,31 @@ def draw_corridor(img, room1, room2, size, length=8):
 def main(img):
     
     coord_store = CoordinateStore(img)
+    g = UndirectedGraph()
     
-    r1 = Room(img, 1, 10, dx)
-    r2 = Room(img, 1, 11, dx)
-    r3 = Room(img, 2, 11, dx)
-    r4 = Room(img, 2, 10, dx)
-    r5 = Room(img, 2, 9, dx)
-    draw_corridor(img, r1, r2, dx)
-    draw_corridor(img, r2, r3, dx)
-    draw_corridor(img, r3, r4, dx)
-    draw_corridor(img, r4, r5, dx)
+    room = [
+        Room(img, 1, 10, dx, id=0),
+        Room(img, 1, 11, dx, id=1),
+        Room(img, 2, 11, dx, id=2),
+        Room(img, 2, 10, dx, id=3),
+        Room(img, 2, 9, dx, id=4)
+    ]
+    
+    for r in room:
+        g.add_vertex(r)
+            
+    draw_corridor(img, room[0], room[1], dx)
+    draw_corridor(img, room[1], room[2], dx)
+    draw_corridor(img, room[2], room[3], dx)
+    draw_corridor(img, room[3], room[4], dx)
+    
+    g.add_edge(room[0], room[1])
+    g.add_edge(room[1], room[2])
+    g.add_edge(room[2], room[3])
+    g.add_edge(room[3], room[4])
+
+
+    g.get_rooms()
     
     img = draw_grid(
         img=img,
