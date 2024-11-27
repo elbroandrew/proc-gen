@@ -75,30 +75,34 @@ class Room:
 def draw_corridors(img, adj_list: dict, size, length=8):
     # the corridor connects exactly only 2 rooms
     # adj_list is 'room0.id:[room1.id, room2.id, ..]' adjacency list
+    thickness=8
 
     s=int(size)
     
     for room1 in adj_list.keys():
+        
+        x = room1.x * s
+        y = room1.y * s
+        cx = x + s//2
+        cy = y + s//2
+        
         for room2 in adj_list[room1]:
             # print("room1:", room1.id, "room2: ", room2.id)
             
-            x = room1.x * s
-            y = room1.y * s
-            cx = x + s//2
-            cy = y + s//2
+            
             
             if room1.x == room2.x:
                 # draw vertical
                 if room2.y > room1.y:
-                    cv.rectangle(img, (cx, cy+length), (cx, cy+s-length), (250, 250, 250), thickness=3)  # S
+                    cv.rectangle(img, (cx, cy+length), (cx, cy+s-length), (250, 250, 250), thickness)  # S
                 else:
-                    cv.rectangle(img, (cx, cy-length), (cx, cy-s+length), (250, 250, 250), thickness=3)  # N
+                    cv.rectangle(img, (cx, cy-length), (cx, cy-s+length), (250, 250, 250), thickness)  # N
             if room1.y == room2.y:
                 # draw horizontal
                 if room2.x > room1.x:
-                    cv.rectangle(img, (cx+length, cy), (cx+s-length, cy), (250, 250, 250), thickness=3)  # E
+                    cv.rectangle(img, (cx+length, cy), (cx+s-length, cy), (250, 250, 250), thickness)  # E
                 else:
-                    cv.rectangle(img, (cx, cy), (cx, cy), (250, 250, 250), thickness=3)  # W
+                    cv.rectangle(img, (cx, cy), (cx, cy), (250, 250, 250), thickness)  # W
 
 
 def main(img):
@@ -126,8 +130,6 @@ def main(img):
     
     draw_corridors(img, g.get_rooms, dx)
 
-    # c = g.get_rooms()
-    # print(c)
     
     img = draw_grid(
         img=img,
@@ -151,9 +153,6 @@ if __name__ == "__main__":
     
     
 # TODO: choose random room
-# create corridor if not exists
+# create corridor if not exists or if no boundaries.
 # check if next cell has room, connect rooms. Finish.
-# repeat algorithms few times
-# Create GRAPH, put all rooms and edges into the graph
-
-#TODO: указать, что 2,10 клетку и 2,11 соединяю просто вертикально. Без направлений север-юг.
+# repeat algorithm few times
