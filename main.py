@@ -15,7 +15,7 @@ h, w, channels = img.shape
 dy, dx = h/rows, w/cols
 
 def draw_grid(img, rows, cols, color=(255,255,0), thickness=1):
-    h, w, channels = img.shape
+    h, w, _ = img.shape
     dy, dx = h/rows, w/cols
     
     # draw vertical lines
@@ -43,49 +43,77 @@ class CoordinateStore:
             print(dx, dy)
             
     def converted_coords(self, rows, cols, xx, yy):
-        h, w, channels = self.img.shape
+        h, w, _ = self.img.shape
         dy, dx = h/rows, w/cols
     
     
         return floor(xx/dx), floor(yy/dy)
-  
-def draw_room(img, x, y, size):
-    s=int(size)
-    x *= s
-    y *= s
-    cv.rectangle(img, (x, y), (x+s, y+s), (70, 150, 150), -1)
+
+class Room:
+    def __init__(self, img, x, y, size, offset=6):
+        self.x = x
+        self.y = y
+        s=int(size)
+        self.xx = x * s
+        self.yy = y * s
+        cv.rectangle(img, 
+                     (self.xx+offset, self.yy+offset), 
+                     (self.xx+s-offset, self.yy+s-offset), 
+                     (70, 150, 150), -1)
+        
+    # def draw_room(self, img, size):
+    #     s=int(size)
+    #     offset=6
+    #     self.x *= s
+    #     self.y *= s
+    #     cv.rectangle(img, 
+    #                  (self.x+offset, self.y+offset), 
+    #                  (self.x+s-offset, self.y+s-offset), 
+    #                  (70, 150, 150), -1)
     
 
-def draw_corridor(img, x, y, size, direction):
+def draw_corridor(img, room1, room2, size, length=8):
+    # the corridor connects exactly only 2 rooms
     s=int(size)
-    x *= s
-    y *= s
+    x = room1.x * s
+    print(room1.x)
+    y = room1.y * s
     cx = x + s//2
     cy = y + s//2
-    if direction.S:
-        cv.rectangle(img, (cx, cy), (cx, cy+s), (250, 250, 250), thickness=3)  # S
-    elif direction.N:
-        cv.rectangle(img, (cx, cy), (cx, cy-s), (250, 250, 250), thickness=3)  # N
-    elif direction.E:
-        cv.rectangle(img, (cx, cy), (cx+s, cy), (250, 250, 250), thickness=3)  # E
-    elif direction.W:
-        cv.rectangle(img, (cx, cy), (cx, cy), (250, 250, 250), thickness=3)  # W
+    x2 = room2.x * s
+    y2 = room2.y * s
+    cx2 = x2 + s//2
+    cy2 = y2 + s//2
+    if room1.x == room2.x:
+        # draw vertical
+        if room2.y > room1.y:
+            cv.rectangle(img, (cx, cy+length), (cx, cy+s-length), (250, 250, 250), thickness=3)  # S
+        else:
+            cv.rectangle(img, (cx, cy-length), (cx, cy-s+length), (250, 250, 250), thickness=3)  # N
+    if room1.y == room2.y:
+        # draw horizontal
+        if room2.x > room1.x:
+            cv.rectangle(img, (cx+length, cy), (cx+s-length, cy), (250, 250, 250), thickness=3)  # E
+        else:
+            cv.rectangle(img, (cx, cy), (cx, cy), (250, 250, 250), thickness=3)  # W
 
 
 
-
-Dir = namedtuple("Dir", ["N", "S", "W", "E"], defaults=[0,0,0,0])
     
 
 def main(img):
     
     coord_store = CoordinateStore(img)
     
-    draw_room(img, 1, 10, dx)
-    draw_room(img, 1, 11, dx)
-    draw_room(img, 2, 11, dx)
-    draw_corridor(img, 1, 10, dx, direction=Dir(S=1))
-    draw_corridor(img, 1, 11, dx, direction=Dir(E=1))
+    r1 = Room(img, 1, 10, dx)
+    r2 = Room(img, 1, 11, dx)
+    r3 = Room(img, 2, 11, dx)
+    r4 = Room(img, 2, 10, dx)
+    r5 = Room(img, 2, 9, dx)
+    draw_corridor(img, r1, r2, dx)
+    draw_corridor(img, r2, r3, dx)
+    draw_corridor(img, r3, r4, dx)
+    draw_corridor(img, r4, r5, dx)
     
     img = draw_grid(
         img=img,
@@ -112,3 +140,5 @@ if __name__ == "__main__":
 # check if next cell has room, connect rooms. Finish.
 # repeat algorithms few times
 # Create GRAPH, put all rooms and edges into the graph
+
+#TODO: указать, что 2,10 клетку и 2,11 соединяю просто вертикально. Без направлений север-юг.
