@@ -6,14 +6,19 @@ class UndirectedGraph:
     def root(self):
         return next(iter(self._adjacency_list))  # returns only FIRST element
 
+    @property
     def get_rooms(self):
+        adj_list = {}
         for room, values in self._adjacency_list.items():
             print(f"{room.id}:{[r.id for r in values]}")
-        # return self._adjacency_list
+            # adj_list[room.id]=[r.id for r in values]
+        return self._adjacency_list
+
 
     def add_vertex(self, vertex):
         if not vertex in self._adjacency_list.keys():
             self._adjacency_list[vertex] = []
+
 
     def add_edge(self, v1, v2):
         if v1 in self._adjacency_list.keys():

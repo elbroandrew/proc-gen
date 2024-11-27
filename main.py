@@ -60,32 +60,46 @@ class Room:
                      (self.xx+s-offset, self.yy+s-offset), 
                      (70, 150, 150), -1)
         
+        # draw ID
+        cv.putText(img, 
+                   str(self.id), 
+                   (self.xx+12, self.yy+20), 
+                   cv.FONT_HERSHEY_PLAIN, 
+                   0.8, 
+                   (255, 255, 255), 
+                   1, 
+                   cv.LINE_AA)
+        
     
 
-def draw_corridor(img, room1, room2, size, length=8):
+def draw_corridors(img, adj_list: dict, size, length=8):
     # the corridor connects exactly only 2 rooms
+    # adj_list is 'room0.id:[room1.id, room2.id, ..]' adjacency list
+
     s=int(size)
-    x = room1.x * s
-    y = room1.y * s
-    cx = x + s//2
-    cy = y + s//2
     
-    if room1.x == room2.x:
-        # draw vertical
-        if room2.y > room1.y:
-            cv.rectangle(img, (cx, cy+length), (cx, cy+s-length), (250, 250, 250), thickness=3)  # S
-        else:
-            cv.rectangle(img, (cx, cy-length), (cx, cy-s+length), (250, 250, 250), thickness=3)  # N
-    if room1.y == room2.y:
-        # draw horizontal
-        if room2.x > room1.x:
-            cv.rectangle(img, (cx+length, cy), (cx+s-length, cy), (250, 250, 250), thickness=3)  # E
-        else:
-            cv.rectangle(img, (cx, cy), (cx, cy), (250, 250, 250), thickness=3)  # W
+    for room1 in adj_list.keys():
+        for room2 in adj_list[room1]:
+            # print("room1:", room1.id, "room2: ", room2.id)
+            
+            x = room1.x * s
+            y = room1.y * s
+            cx = x + s//2
+            cy = y + s//2
+            
+            if room1.x == room2.x:
+                # draw vertical
+                if room2.y > room1.y:
+                    cv.rectangle(img, (cx, cy+length), (cx, cy+s-length), (250, 250, 250), thickness=3)  # S
+                else:
+                    cv.rectangle(img, (cx, cy-length), (cx, cy-s+length), (250, 250, 250), thickness=3)  # N
+            if room1.y == room2.y:
+                # draw horizontal
+                if room2.x > room1.x:
+                    cv.rectangle(img, (cx+length, cy), (cx+s-length, cy), (250, 250, 250), thickness=3)  # E
+                else:
+                    cv.rectangle(img, (cx, cy), (cx, cy), (250, 250, 250), thickness=3)  # W
 
-
-
-    
 
 def main(img):
     
@@ -102,25 +116,25 @@ def main(img):
     
     for r in room:
         g.add_vertex(r)
-            
-    draw_corridor(img, room[0], room[1], dx)
-    draw_corridor(img, room[1], room[2], dx)
-    draw_corridor(img, room[2], room[3], dx)
-    draw_corridor(img, room[3], room[4], dx)
+    
     
     g.add_edge(room[0], room[1])
     g.add_edge(room[1], room[2])
     g.add_edge(room[2], room[3])
     g.add_edge(room[3], room[4])
+    
+    
+    draw_corridors(img, g.get_rooms, dx)
 
-
-    g.get_rooms()
+    # c = g.get_rooms()
+    # print(c)
     
     img = draw_grid(
         img=img,
         rows=rows,
         cols=cols
     )
+    
     
     cv.imshow("image", img)
     
