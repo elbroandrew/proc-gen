@@ -37,13 +37,16 @@ class RoomGenerator:
 
     def get_random_room(self):
         
-        while True:
+        running = True
+        while running:
             room = random.choice(list(self.g.get_rooms.keys()))
-            if len(self.g._adjacency_list[room]) >= room.max_edges:
+            if len(self.g._adjacency_list[room]) < room.max_edges:
                 print(f"max edges from WHILE LOOP: {room.max_edges}")
+                print("random room ID: " + str(room.id))
+                return room
             else:
-                break
+                running = False
                     
         print("random room ID: " + str(room.id))
         print(f"max edges OUTSIDE LOOP: {room.max_edges}")
-        return room
+        return None
