@@ -2,8 +2,9 @@ import numpy as np
 import cv2 as cv
 from math import floor
 from undirected_graph import UndirectedGraph
-from room import Room
 from image import NewImage
+from room_generator import RoomGenerator
+
 
 new_img = NewImage()
 img = new_img._img
@@ -84,23 +85,26 @@ def main(img):
     
     coord_store = CoordinateStore(img)
     g = UndirectedGraph()
+    generator = RoomGenerator(8, img, g, new_img._cell_size)
     
-    room = [
-        Room(img, 1, 10, dx),
-        Room(img, 1, 11, dx),
-        Room(img, 2, 11, dx),
-        Room(img, 2, 10, dx),
-        Room(img, 2, 9, dx)
-    ]
+    # room = [
+    #     Room(img, 1, 10, dx),
+    #     Room(img, 1, 11, dx),
+    #     Room(img, 2, 11, dx),
+    #     Room(img, 2, 10, dx),
+    #     Room(img, 2, 9, dx)
+    # ]
     
-    for r in room:
-        g.add_vertex(r)
+    generator.create_first_room()
+    
+    # for r in room:
+    #     g.add_vertex(r)
     
     
-    g.add_edge(room[0], room[1])
-    g.add_edge(room[1], room[2])
-    g.add_edge(room[2], room[3])
-    g.add_edge(room[3], room[4])
+    # g.add_edge(room[0], room[1])
+    # g.add_edge(room[1], room[2])
+    # g.add_edge(room[2], room[3])
+    # g.add_edge(room[3], room[4])
     
     
     draw_corridors(img, g.get_rooms, dx)
