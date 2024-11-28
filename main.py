@@ -1,6 +1,6 @@
 import numpy as np
 import cv2 as cv
-from math import floor
+from coord_store import CoordinateStore
 from undirected_graph import UndirectedGraph
 from image import NewImage
 from room_generator import RoomGenerator
@@ -9,8 +9,7 @@ from room_generator import RoomGenerator
 new_img = NewImage()
 img = new_img._img
 rows_cols=new_img._rows_cols
-h, w = new_img._h, new_img._w
-dx = new_img._cell_size
+
 
 def draw_grid(img, rows, cols, color=(255,255,0), thickness=1):
     h, w, _ = img.shape
@@ -29,23 +28,7 @@ def draw_grid(img, rows, cols, color=(255,255,0), thickness=1):
         
     return img
 
-class CoordinateStore:
-    def __init__(self, img):
-        self.points=[]
-        self.img=img
-            
 
-    def click_event(self, event, x, y, flags, params):
-        if event == cv.EVENT_LBUTTONDOWN:
-            dx, dy = self.converted_coords(rows_cols, rows_cols, x, y)
-            print(dx, dy)
-            
-    def converted_coords(self, rows, cols, xx, yy):
-        h, w, _ = self.img.shape
-        dy, dx = h/rows, w/cols
-    
-    
-        return floor(xx/dx), floor(yy/dy)
 
 
         
@@ -83,7 +66,7 @@ def draw_corridors(img, adj_list: dict, size, length=8):
 
 def main(img):
     
-    coord_store = CoordinateStore(img)
+    coord_store = CoordinateStore(img, rows_cols)
     g = UndirectedGraph()
     generator = RoomGenerator(8, img, g, new_img._cell_size)
     
@@ -107,7 +90,7 @@ def main(img):
     # g.add_edge(room[3], room[4])
     
     
-    draw_corridors(img, g.get_rooms, dx)
+    draw_corridors(img, g.get_rooms, new_img._cell_size)
 
     
     img = draw_grid(
