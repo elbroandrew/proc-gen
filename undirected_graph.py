@@ -8,10 +8,8 @@ class UndirectedGraph:
 
     @property
     def get_rooms(self):
-        adj_list = {}
         for room, values in self._adjacency_list.items():
             print(f"{room.id}:{[r.id for r in values]}")
-            # adj_list[room.id]=[r.id for r in values]
         return self._adjacency_list
 
 
@@ -34,7 +32,19 @@ class UndirectedGraph:
         else:
             self.add_vertex(v2)
             self._adjacency_list[v2].append(v1)
+            
+            
+    def check_edge(self, r1, r2) -> bool:
+        """checks if edge exists between two rooms
 
+        Args:
+            r1 (Room): room 1
+            r2 (Room): room 2
+        """
+        if r2 in self._adjacency_list[r1] or r1 in self._adjacency_list[r2]:
+            return True
+        
+        return False
 
 
     def dfs_recursive_traverse(self, start):

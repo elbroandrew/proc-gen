@@ -1,16 +1,15 @@
 import numpy as np
 import cv2 as cv
 from math import floor
-from PIL import Image
 from undirected_graph import UndirectedGraph
+from room import Room
+from image import NewImage
 
-
-img_size=512
-img1 = Image.new('RGB', (img_size, img_size), (0, 0, 0))
-img = cv.cvtColor(np.array(img1), cv.COLOR_BGR2RGB)
-rows=cols=16
-h, w, channels = img.shape
-dy, dx = h/rows, w/cols
+new_img = NewImage()
+img = new_img._img
+rows_cols=new_img._rows_cols
+h, w = new_img._h, new_img._w
+dx = new_img._cell_size
 
 def draw_grid(img, rows, cols, color=(255,255,0), thickness=1):
     h, w, _ = img.shape
@@ -37,7 +36,7 @@ class CoordinateStore:
 
     def click_event(self, event, x, y, flags, params):
         if event == cv.EVENT_LBUTTONDOWN:
-            dx, dy = self.converted_coords(rows, cols, x, y)
+            dx, dy = self.converted_coords(rows_cols, rows_cols, x, y)
             print(dx, dy)
             
     def converted_coords(self, rows, cols, xx, yy):
@@ -47,35 +46,14 @@ class CoordinateStore:
     
         return floor(xx/dx), floor(yy/dy)
 
-class Room:
-    def __init__(self, img, x, y, size, offset=6, id=0):
-        self.id = id
-        self.x = x
-        self.y = y
-        s=int(size)
-        self.xx = x * s
-        self.yy = y * s
-        cv.rectangle(img, 
-                     (self.xx+offset, self.yy+offset), 
-                     (self.xx+s-offset, self.yy+s-offset), 
-                     (70, 150, 150), -1)
-        
-        # draw ID
-        cv.putText(img, 
-                   str(self.id), 
-                   (self.xx+12, self.yy+20), 
-                   cv.FONT_HERSHEY_PLAIN, 
-                   0.8, 
-                   (255, 255, 255), 
-                   1, 
-                   cv.LINE_AA)
+
         
     
 
 def draw_corridors(img, adj_list: dict, size, length=8):
     # the corridor connects exactly only 2 rooms
-    # adj_list is 'room0.id:[room1.id, room2.id, ..]' adjacency list
-    thickness=8
+    
+    thickness=3
 
     s=int(size)
     
@@ -87,9 +65,6 @@ def draw_corridors(img, adj_list: dict, size, length=8):
         cy = y + s//2
         
         for room2 in adj_list[room1]:
-            # print("room1:", room1.id, "room2: ", room2.id)
-            
-            
             
             if room1.x == room2.x:
                 # draw vertical
@@ -102,7 +77,7 @@ def draw_corridors(img, adj_list: dict, size, length=8):
                 if room2.x > room1.x:
                     cv.rectangle(img, (cx+length, cy), (cx+s-length, cy), (250, 250, 250), thickness)  # E
                 else:
-                    cv.rectangle(img, (cx, cy), (cx, cy), (250, 250, 250), thickness)  # W
+                    cv.rectangle(img, (cx-length, cy), (cx-s+length, cy), (250, 250, 250), thickness)  # W
 
 
 def main(img):
@@ -111,11 +86,11 @@ def main(img):
     g = UndirectedGraph()
     
     room = [
-        Room(img, 1, 10, dx, id=0),
-        Room(img, 1, 11, dx, id=1),
-        Room(img, 2, 11, dx, id=2),
-        Room(img, 2, 10, dx, id=3),
-        Room(img, 2, 9, dx, id=4)
+        Room(img, 1, 10, dx),
+        Room(img, 1, 11, dx),
+        Room(img, 2, 11, dx),
+        Room(img, 2, 10, dx),
+        Room(img, 2, 9, dx)
     ]
     
     for r in room:
@@ -133,8 +108,8 @@ def main(img):
     
     img = draw_grid(
         img=img,
-        rows=rows,
-        cols=cols
+        rows=rows_cols,
+        cols=rows_cols
     )
     
     
