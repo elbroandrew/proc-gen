@@ -16,8 +16,8 @@ class Room:
         self.id = self._increment_id()
         self.x = x
         self.y = y
-        self.image_min = 0
-        self.image_max = img._rows_cols-1
+        self.boundary_min = 0
+        self.boundary_max = img._rows_cols-1
         self.max_edges = self.get_max_edges()
         self.offset = offset
         self.s=int(cell_size)
@@ -40,9 +40,9 @@ class Room:
         
     
     def get_max_edges(self):
-        if (self.x == self.image_min or self.x == self.image_max) and (self.y == self.image_min or self.y == self.image_max):
+        if (self.x == self.boundary_min or self.x == self.boundary_max) and (self.y == self.boundary_min or self.y == self.boundary_max):
             return 2
-        elif not( self.x == self.image_min or self.x == self.image_max) and not( self.y == self.image_min or  self.y == self.image_max):
+        elif not( self.x == self.boundary_min or self.x == self.boundary_max) and not( self.y == self.boundary_min or  self.y == self.boundary_max):
             return 4
         else:
             return 3
