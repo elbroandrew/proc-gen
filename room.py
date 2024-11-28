@@ -12,10 +12,13 @@ class Room:
         
         
     def __init__(self, img, x, y, cell_size, offset=6):
-        self.img = img
+        self.img = img._img
         self.id = self._increment_id()
         self.x = x
         self.y = y
+        self.image_min = 0
+        self.image_max = img._rows_cols-1
+        self.max_edges = self.get_max_edges()
         self.offset = offset
         self.s=int(cell_size)
         self.xx = self.x * self.s
@@ -34,3 +37,15 @@ class Room:
                    (255, 255, 255), 
                    1, 
                    cv.LINE_AA)
+        
+    
+    def get_max_edges(self):
+        if self.x == self.image_min or self.x == self.image_max: # 0 or 15
+            if self.y == self.image_min or self.y == self.image_max: # 0 or 15
+                self.max_edges = 2
+        elif not self.x == self.image_min or not self.x == self.image_max: # not 0 nor 15
+            if not self.y == self.image_min or not self.y == self.image_max: # not 0 nor 15
+                self.max_edges = 4
+        else:
+            self.max_edges = 3
+            

@@ -5,7 +5,7 @@ class CoordinateStore:
     
     def __init__(self, img, rows_cols):
         self.points=[]
-        self.img=img
+        self.img=img._img
         self.rc = rows_cols
             
 

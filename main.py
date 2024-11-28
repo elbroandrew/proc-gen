@@ -7,26 +7,26 @@ from room_generator import RoomGenerator
 
 
 new_img = NewImage()
-img = new_img._img
 rows_cols=new_img._rows_cols
+cell_size = new_img._cell_size
 
 
 def draw_grid(img, rows, cols, color=(255,255,0), thickness=1):
-    h, w, _ = img.shape
+    h, w, _ = img._img.shape
     dy, dx = h/rows, w/cols
     
     # draw vertical lines
     for x in np.linspace(start=dx, stop=w-dx, num=cols-1):
         x=int(round(x))
-        cv.line(img, (x,0), (x,h), color=color, thickness=thickness)
+        cv.line(img._img, (x,0), (x,h), color=color, thickness=thickness)
         
     # draw horizontal lines
     for y in np.linspace(start=dy, stop=h-dy, num=rows-1):
         y = int(round(y))
-        cv.line(img, (0, y), (w, y), color=color, thickness=thickness)
+        cv.line(img._img, (0, y), (w, y), color=color, thickness=thickness)
         
         
-    return img
+    return img._img
 
 
 
@@ -53,22 +53,22 @@ def draw_corridors(img, adj_list: dict, size, length=8):
             if room1.x == room2.x:
                 # draw vertical
                 if room2.y > room1.y:
-                    cv.rectangle(img, (cx, cy+length), (cx, cy+s-length), (250, 250, 250), thickness)  # S
+                    cv.rectangle(img._img, (cx, cy+length), (cx, cy+s-length), (250, 250, 250), thickness)  # S
                 else:
-                    cv.rectangle(img, (cx, cy-length), (cx, cy-s+length), (250, 250, 250), thickness)  # N
+                    cv.rectangle(img._img, (cx, cy-length), (cx, cy-s+length), (250, 250, 250), thickness)  # N
             if room1.y == room2.y:
                 # draw horizontal
                 if room2.x > room1.x:
-                    cv.rectangle(img, (cx+length, cy), (cx+s-length, cy), (250, 250, 250), thickness)  # E
+                    cv.rectangle(img._img, (cx+length, cy), (cx+s-length, cy), (250, 250, 250), thickness)  # E
                 else:
-                    cv.rectangle(img, (cx-length, cy), (cx-s+length, cy), (250, 250, 250), thickness)  # W
+                    cv.rectangle(img._img, (cx-length, cy), (cx-s+length, cy), (250, 250, 250), thickness)  # W
 
 
-def main(img):
+def main(new_img):
     
-    coord_store = CoordinateStore(img, rows_cols)
+    coord_store = CoordinateStore(new_img, rows_cols)
     g = UndirectedGraph()
-    generator = RoomGenerator(8, img, g, new_img._cell_size)
+    generator = RoomGenerator(8, new_img, g, cell_size)
     # from room import Room
     # room = [
     #     Room(img, 1, 10, new_img._cell_size),
@@ -89,17 +89,17 @@ def main(img):
     generator.create_first_room()
     generator.get_random_room()  
     
-    draw_corridors(img, g.get_rooms, new_img._cell_size)
+    draw_corridors(new_img, g.get_rooms, new_img._cell_size)
 
     
     img = draw_grid(
-        img=img,
+        img=new_img,
         rows=rows_cols,
         cols=rows_cols
     )
     
     
-    cv.imshow("image", img)
+    cv.imshow("image", new_img._img)
     
     
     # setting mouse handler for the image 
@@ -110,7 +110,7 @@ def main(img):
     cv.destroyAllWindows()
 
 if __name__ == "__main__":
-    main(img)
+    main(new_img)
     
     
 # TODO: choose random room
