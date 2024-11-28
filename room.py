@@ -40,12 +40,11 @@ class Room:
         
     
     def get_max_edges(self):
-        if self.x == self.image_min or self.x == self.image_max: # 0 or 15
-            if self.y == self.image_min or self.y == self.image_max: # 0 or 15
-                self.max_edges = 2
-        elif not self.x == self.image_min or not self.x == self.image_max: # not 0 nor 15
-            if not self.y == self.image_min or not self.y == self.image_max: # not 0 nor 15
-                self.max_edges = 4
+        if (self.x == self.image_min or self.x == self.image_max) and (self.y == self.image_min or self.y == self.image_max):
+            return 2
+        elif (not self.x == self.image_min or not self.x == self.image_max) and (not self.y == self.image_min or not self.y == self.image_max):
+            return 4
         else:
-            self.max_edges = 3
+            return 3
+            
             

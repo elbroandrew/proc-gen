@@ -87,7 +87,9 @@ def main(new_img):
     # g.add_edge(room[3], room[4])
     
     generator.create_first_room()
-    generator.get_random_room()  
+    r = generator.get_random_room()
+    print(f"coords: x:{r.x} y:{r.y}")
+    print(r.max_edges)
     
     draw_corridors(new_img, g.get_rooms, new_img._cell_size)
 
