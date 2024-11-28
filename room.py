@@ -42,7 +42,7 @@ class Room:
     def get_max_edges(self):
         if (self.x == self.image_min or self.x == self.image_max) and (self.y == self.image_min or self.y == self.image_max):
             return 2
-        elif (not self.x == self.image_min or not self.x == self.image_max) and (not self.y == self.image_min or not self.y == self.image_max):
+        elif not( self.x == self.image_min or self.x == self.image_max) and not( self.y == self.image_min or  self.y == self.image_max):
             return 4
         else:
             return 3

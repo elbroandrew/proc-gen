@@ -71,11 +71,9 @@ def main(new_img):
     generator = RoomGenerator(8, new_img, g, cell_size)
     # from room import Room
     # room = [
-    #     Room(img, 1, 10, new_img._cell_size),
-    #     Room(img, 1, 11, new_img._cell_size),
-    #     Room(img, 2, 11, new_img._cell_size),
-    #     Room(img, 2, 10, new_img._cell_size),
-    #     Room(img, 2, 9, new_img._cell_size)
+    #     Room(new_img, 0, 15, new_img._cell_size),
+    #     Room(new_img, 15, 15, new_img._cell_size),
+    #     Room(new_img, 0, 0, new_img._cell_size)
     # ]
     # for r in room:
     #     g.add_vertex(r)
