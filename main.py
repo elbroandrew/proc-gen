@@ -69,26 +69,25 @@ def main(img):
     coord_store = CoordinateStore(img, rows_cols)
     g = UndirectedGraph()
     generator = RoomGenerator(8, img, g, new_img._cell_size)
-    
+    # from room import Room
     # room = [
-    #     Room(img, 1, 10, dx),
-    #     Room(img, 1, 11, dx),
-    #     Room(img, 2, 11, dx),
-    #     Room(img, 2, 10, dx),
-    #     Room(img, 2, 9, dx)
+    #     Room(img, 1, 10, new_img._cell_size),
+    #     Room(img, 1, 11, new_img._cell_size),
+    #     Room(img, 2, 11, new_img._cell_size),
+    #     Room(img, 2, 10, new_img._cell_size),
+    #     Room(img, 2, 9, new_img._cell_size)
     # ]
-    
-    generator.create_first_room()
-    
     # for r in room:
     #     g.add_vertex(r)
-    
+        
     
     # g.add_edge(room[0], room[1])
     # g.add_edge(room[1], room[2])
     # g.add_edge(room[2], room[3])
     # g.add_edge(room[3], room[4])
     
+    generator.create_first_room()
+    generator.get_random_room()  
     
     draw_corridors(img, g.get_rooms, new_img._cell_size)
 

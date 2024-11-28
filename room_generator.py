@@ -26,12 +26,21 @@ class RoomGenerator:
         
         
     def create_next_room(self, room):
-        pass
-        # random.seed()
-        # coord = random.choice(['x', 'y'])
-        # if coord == 'x':
+        random.seed()
+        random_room = self.get_random_room()
+        coord = random.choice(['x', 'y'])
+        if coord == 'x':
+            pass
             
-        # else:
-        #     print(coord)
+        else:
+            print(coord)
 
+    def get_random_room(self):
         
+        while True:
+            r = random.choice(list(self.g.get_rooms.keys()))
+            if len(self.g._adjacency_list[r]) < 4:
+                break
+                    
+        print("random room ID: " + str(r.id))
+        return r

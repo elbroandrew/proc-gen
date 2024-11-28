@@ -8,8 +8,8 @@ class UndirectedGraph:
 
     @property
     def get_rooms(self):
-        for room, values in self._adjacency_list.items():
-            print(f"{room.id}:{[r.id for r in values]}")
+        # for room, values in self._adjacency_list.items():
+        #     print(f"{room.id}:{[r.id for r in values]}")
         return self._adjacency_list
 
 
