@@ -56,7 +56,7 @@ class RoomGenerator:
                     # check for EDGE:
                     if self.g.check_edge(room_exists, selected_room) is False:
                         # create an edge randomly
-                        edge = random.choice(True, False)
+                        edge = random.choice([True, False])
                         if edge:
                             self.g.add_edge(selected_room, room_exists)
                 else:
@@ -73,7 +73,7 @@ class RoomGenerator:
                     # check for EDGE:
                     if self.g.check_edge(room_exists, selected_room) is False:
                         # create an edge randomly
-                        edge = random.choice(True, False)
+                        edge = random.choice([True, False])
                         if edge:
                             self.g.add_edge(selected_room, room_exists)
                 else:
@@ -90,7 +90,7 @@ class RoomGenerator:
                     # check for EDGE:
                     if self.g.check_edge(room_exists, selected_room) is False:
                         # create an edge randomly
-                        edge = random.choice(True, False)
+                        edge = random.choice([True, False])
                         if edge:
                             self.g.add_edge(selected_room, room_exists)
                 else:
@@ -105,7 +105,7 @@ class RoomGenerator:
                 if room_exists:
                     # check for EDGE:
                     if self.g.check_edge(room_exists, selected_room) is False:
-                        edge = random.choice(True, False)
+                        edge = random.choice([True, False])
                         if edge:
                             self.g.add_edge(selected_room, room_exists)
                 else:
@@ -113,7 +113,6 @@ class RoomGenerator:
                     self.g.add_vertex(new_room)
                     self.g.add_edge(selected_room, new_room)
                     
-            # can place room only to the LEFT (right wall)
             elif selected_room.y - 1 >= 0 and selected_room.y + 1 > selected_room.boundary_max:
                 _y = -1
                 ry = selected_room.y + _y
@@ -122,7 +121,7 @@ class RoomGenerator:
                     # check for EDGE:
                     if self.g.check_edge(room_exists, selected_room) is False:
                         # create an edge randomly
-                        edge = random.choice(True, False)
+                        edge = random.choice([True, False])
                         if edge:
                             self.g.add_edge(selected_room, room_exists)
                 else:

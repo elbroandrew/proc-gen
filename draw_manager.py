@@ -1,4 +1,6 @@
 import cv2 as cv
+import numpy as np
+
 
 class DrawManager:
      
@@ -36,3 +38,18 @@ class DrawManager:
                         cv.rectangle(img._img, (cx+length, cy), (cx+s-length, cy), color, thickness)  # E
                     else:
                         cv.rectangle(img._img, (cx-length, cy), (cx-s+length, cy), color, thickness)  # W
+    
+    
+    def draw_grid(self, img, rows, cols, color=(255,255,0), thickness=1):
+        h, w, _ = img._img.shape
+        dy, dx = h/rows, w/cols
+        
+        # draw vertical lines
+        for x in np.linspace(start=dx, stop=w-dx, num=cols-1):
+            x=int(round(x))
+            cv.line(img._img, (x,0), (x,h), color=color, thickness=thickness)
+            
+        # draw horizontal lines
+        for y in np.linspace(start=dy, stop=h-dy, num=rows-1):
+            y = int(round(y))
+            cv.line(img._img, (0, y), (w, y), color=color, thickness=thickness)

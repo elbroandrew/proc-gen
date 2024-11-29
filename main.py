@@ -1,4 +1,3 @@
-import numpy as np
 import cv2 as cv
 from coord_store import CoordinateStore
 from undirected_graph import UndirectedGraph
@@ -6,93 +5,30 @@ from image import NewImage
 from room_generator import RoomGenerator
 from draw_manager import DrawManager
 
-
-new_img = NewImage()
-rows_cols=new_img._rows_cols
-cell_size = new_img._cell_size
-
-
-def draw_grid(img, rows, cols, color=(255,255,0), thickness=1):
-    h, w, _ = img._img.shape
-    dy, dx = h/rows, w/cols
-    
-    # draw vertical lines
-    for x in np.linspace(start=dx, stop=w-dx, num=cols-1):
-        x=int(round(x))
-        cv.line(img._img, (x,0), (x,h), color=color, thickness=thickness)
         
-    # draw horizontal lines
-    for y in np.linspace(start=dy, stop=h-dy, num=rows-1):
-        y = int(round(y))
-        cv.line(img._img, (0, y), (w, y), color=color, thickness=thickness)
-        
-        
-    return img._img
- 
 
-
-
-
-def main(new_img):
+def main():
+    new_img = NewImage()
+    rows_cols=new_img._rows_cols    
+    cell_size = new_img._cell_size
+    rooms_numbers = 10
     
     coord_store = CoordinateStore(new_img, rows_cols)
     g = UndirectedGraph()
     generator = RoomGenerator(8, new_img, g, cell_size)
-    # from room import Room
-    # room = [
-    #     Room(new_img, 0, 15, new_img._cell_size),
-    #     Room(new_img, 15, 15, new_img._cell_size),
-    #     Room(new_img, 0, 0, new_img._cell_size)
-    # ]
-    # for r in room:
-    #     g.add_vertex(r)
-        
-    
-    # g.add_edge(room[0], room[1])
-    # g.add_edge(room[1], room[2])
-    # g.add_edge(room[2], room[3])
-    # g.add_edge(room[3], room[4])
     
     generator.create_first_room()
-    r = generator.choose_random_room()
+    generator.choose_random_room()
     
-    generator.place_next_room()
-    generator.place_next_room()
-    generator.place_next_room()
-    generator.place_next_room()
-    generator.place_next_room()
-    generator.place_next_room()
-    generator.place_next_room()
-    generator.place_next_room()
-    generator.place_next_room()
-    generator.place_next_room()
-    generator.place_next_room()
-    generator.place_next_room()
-    generator.place_next_room()
-    generator.place_next_room()
-    generator.place_next_room()
-    generator.place_next_room()
-    generator.place_next_room()
-    generator.place_next_room()
-    generator.place_next_room()
-    generator.place_next_room()
-    generator.place_next_room()
-    generator.place_next_room()
-    generator.place_next_room()
-    generator.place_next_room()
+    for n in range(rooms_numbers+1):   
+        generator.place_next_room()
     
         
     rooms = list(g.get_rooms.keys())
     draw_manager = DrawManager()
     draw_manager.draw_corridors(new_img, g.get_rooms, new_img._cell_size)
     draw_manager.draw_rooms(rooms)
-
-    
-    img = draw_grid(
-        img=new_img,
-        rows=rows_cols,
-        cols=rows_cols
-    )
+    draw_manager.draw_grid(new_img, rows_cols, rows_cols)
     
     
     cv.imshow("image", new_img._img)
@@ -106,5 +42,5 @@ def main(new_img):
     cv.destroyAllWindows()
 
 if __name__ == "__main__":
-    main(new_img)
+    main()
     
