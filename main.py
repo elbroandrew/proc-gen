@@ -4,6 +4,7 @@ from coord_store import CoordinateStore
 from undirected_graph import UndirectedGraph
 from image import NewImage
 from room_generator import RoomGenerator
+from draw_manager import DrawManager
 
 
 new_img = NewImage()
@@ -27,18 +28,13 @@ def draw_grid(img, rows, cols, color=(255,255,0), thickness=1):
         
         
     return img._img
-
-
-
-
-        
-    
+ 
 
 def draw_corridors(img, adj_list: dict, size, length=8):
     # the corridor connects exactly only 2 rooms
     
     thickness=3
-
+    color = (70, 150, 150)
     s=int(size)
     
     for room1 in adj_list.keys():
@@ -53,15 +49,15 @@ def draw_corridors(img, adj_list: dict, size, length=8):
             if room1.x == room2.x:
                 # draw vertical
                 if room2.y > room1.y:
-                    cv.rectangle(img._img, (cx, cy+length), (cx, cy+s-length), (250, 250, 250), thickness)  # S
+                    cv.rectangle(img._img, (cx, cy+length), (cx, cy+s-length), color, thickness)  # S
                 else:
-                    cv.rectangle(img._img, (cx, cy-length), (cx, cy-s+length), (250, 250, 250), thickness)  # N
+                    cv.rectangle(img._img, (cx, cy-length), (cx, cy-s+length), color, thickness)  # N
             if room1.y == room2.y:
                 # draw horizontal
                 if room2.x > room1.x:
-                    cv.rectangle(img._img, (cx+length, cy), (cx+s-length, cy), (250, 250, 250), thickness)  # E
+                    cv.rectangle(img._img, (cx+length, cy), (cx+s-length, cy), color, thickness)  # E
                 else:
-                    cv.rectangle(img._img, (cx-length, cy), (cx-s+length, cy), (250, 250, 250), thickness)  # W
+                    cv.rectangle(img._img, (cx-length, cy), (cx-s+length, cy), color, thickness)  # W
 
 
 def main(new_img):
@@ -86,8 +82,7 @@ def main(new_img):
     
     generator.create_first_room()
     r = generator.choose_random_room()
-    # print(f"coords: x:{r.x} y:{r.y}")
-    # print(r.max_edges)
+    
     generator.place_next_room()
     generator.place_next_room()
     generator.place_next_room()
@@ -115,6 +110,8 @@ def main(new_img):
     
     
     draw_corridors(new_img, g.get_rooms, new_img._cell_size)
+    rooms = list(g.get_rooms.keys())
+    DrawManager(rooms)
 
     
     img = draw_grid(
@@ -137,8 +134,3 @@ def main(new_img):
 if __name__ == "__main__":
     main(new_img)
     
-    
-# TODO: choose random room
-# create corridor if not exists or if no boundaries.
-# check if next cell has room, connect rooms. Finish.
-# repeat algorithm few times

@@ -23,20 +23,34 @@ class Room:
         self.s=int(cell_size)
         self.xx = self.x * self.s
         self.yy = self.y * self.s
+
+        
+    def draw(self):
+        text = str(self.id)
+        font = cv.FONT_HERSHEY_PLAIN
+        font_scale = 0.8
+        thickness = 1
+        offset_x = int(self.s / 2)
+        offset_y = int(self.s / 2) + 8
+        text_boundaries = cv.getTextSize(text, font, font_scale, thickness)[0]
+        text_x = round(self.xx - text_boundaries[0]/2)
+        text_y = round(self.yy - text_boundaries[1]/2)
+        
         cv.rectangle(self.img, 
-                     (self.xx+self.offset, self.yy+self.offset), 
-                     (self.xx+self.s-self.offset, self.yy+self.s-self.offset), 
-                     (70, 150, 150), -1)
+                (self.xx+self.offset, self.yy+self.offset), 
+                (self.xx+self.s-self.offset, self.yy+self.s-self.offset), 
+                (70, 150, 150), -1)
         
         # draw ID
         cv.putText(self.img, 
-                   str(self.id), 
-                   (self.xx+12, self.yy+20), 
-                   cv.FONT_HERSHEY_PLAIN, 
-                   0.8, 
+                   text, 
+                   (text_x+offset_x, text_y+offset_y), 
+                   font, 
+                   font_scale, 
                    (255, 255, 255), 
-                   1, 
+                   thickness, 
                    cv.LINE_AA)
+        
         
     
     def get_max_edges(self):
