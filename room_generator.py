@@ -26,63 +26,111 @@ class RoomGenerator:
         
         
     def place_next_room(self):
-        random.seed()
         selected_room = self.choose_random_room()
         coord = random.choice(['x', 'y'])
-        adj_list = self.g.get_rooms
         if coord == 'x':
             _x = random.choice([-1, 1])
             # check if there are no walls right and left of the selected room
             if selected_room.x - 1 >= 0 and selected_room.x + 1 <= selected_room.boundary_max:
-                rx = selected_room.x + _x   # place room to the right or left
-                coords_list = []
-                for room in adj_list[selected_room]:
-                    coords_list.append((room.x, room.y))
-                if not (rx, selected_room.y) in coords_list:
-                    # I can place a room to the right or left
+                # place room to the right or left
+                rx = selected_room.x + _x  
+                room_exists = self.g.get_room_by_coord(rx, selected_room.y)
+                if room_exists: # check if no room (connected or not) to the left or right
+                    # check for EDGE:
+                    if self.g.check_edge(room_exists, selected_room) is False:
+                        # create an edge randomly
+                        edge = random.choice([True, False])
+                        if edge:
+                            self.g.add_edge(selected_room, room_exists)
+                else:
                     new_room = Room(self.img, rx, selected_room.y, self.cell_size)
                     self.g.add_vertex(new_room)
                     self.g.add_edge(selected_room, new_room)
-
+                        
             # can create only to the RIGHT (left wall)
             elif selected_room.x - 1 < 0 and selected_room.x + 1 <= selected_room.boundary_max:
                 _x = 1
                 rx = selected_room.x + _x   # place room to the right
-                coords_list = []
-                for room in adj_list[selected_room]:
-                    coords_list.append((room.x, room.y))
-                if not (rx, selected_room.y) in coords_list:
-                    # I can place a room to the right
+                room_exists = self.g.get_room_by_coord(rx, selected_room.y)
+                if room_exists: # check if no room (connected or not) to the left or right
+                    # check for EDGE:
+                    if self.g.check_edge(room_exists, selected_room) is False:
+                        # create an edge randomly
+                        edge = random.choice(True, False)
+                        if edge:
+                            self.g.add_edge(selected_room, room_exists)
+                else:
                     new_room = Room(self.img, rx, selected_room.y, self.cell_size)
                     self.g.add_vertex(new_room)
                     self.g.add_edge(selected_room, new_room)
+                    
             # can place room only to the LEFT (right wall)
             elif selected_room.x - 1 >= 0 and selected_room.x + 1 > selected_room.boundary_max:
                 _x = -1
-                rx = selected_room.x + _x   # place room to the left
-                coords_list = []
-                for room in adj_list[selected_room]:
-                    coords_list.append((room.x, room.y))
-                if not (rx, selected_room.y) in coords_list:
-                    # I can place a room to the left
+                rx = selected_room.x + _x   # place room to the right
+                room_exists = self.g.get_room_by_coord(rx, selected_room.y)
+                if room_exists: # check if no room (connected or not) to the left or right
+                    # check for EDGE:
+                    if self.g.check_edge(room_exists, selected_room) is False:
+                        # create an edge randomly
+                        edge = random.choice(True, False)
+                        if edge:
+                            self.g.add_edge(selected_room, room_exists)
+                else:
                     new_room = Room(self.img, rx, selected_room.y, self.cell_size)
                     self.g.add_vertex(new_room)
                     self.g.add_edge(selected_room, new_room)
                    
         elif coord == 'y':
-            if selected_room.y - 1 >= 0 or selected_room.y + 1 <= selected_room.boundary_max:
-                _y = random.choice([-1, 1])
-                # check if there are no walls top and bottom of the selected room
-                if selected_room.y - 1 >= 0 and selected_room.y + 1 <= selected_room.boundary_max:
-                    ry = selected_room.y + _y   # place room to the top or bottom
-                    coords_list = []
-                    for room in adj_list[selected_room]:
-                        coords_list.append((room.x, room.y))
-                    if not (selected_room.x, ry) in coords_list:
-                        # I can place a room to the top or bottom
-                        new_room = Room(self.img, selected_room.x, ry, self.cell_size)
-                        self.g.add_vertex(new_room)
-                        self.g.add_edge(selected_room, new_room)
+            _y = random.choice([-1, 1])
+            if selected_room.y - 1 >= 0 and selected_room.y + 1 <= selected_room.boundary_max:
+                ry = selected_room.y + _y   # place room to the top or bottom
+                room_exists = self.g.get_room_by_coord(selected_room.x, ry)
+                if room_exists:
+                    # check for EDGE:
+                    if self.g.check_edge(room_exists, selected_room) is False:
+                        # create an edge randomly
+                        edge = random.choice(True, False)
+                        if edge:
+                            self.g.add_edge(selected_room, room_exists)
+                else:
+                    new_room = Room(self.img, selected_room.x, ry, self.cell_size)
+                    self.g.add_vertex(new_room)
+                    self.g.add_edge(selected_room, new_room)
+                    
+            elif selected_room.y - 1 < 0 and selected_room.y + 1 <= selected_room.boundary_max:
+                _y = 1
+                ry = selected_room.y + _y 
+                room_exists = self.g.get_room_by_coord(selected_room.x, ry)
+                if room_exists:
+                    # check for EDGE:
+                    if self.g.check_edge(room_exists, selected_room) is False:
+                        edge = random.choice(True, False)
+                        if edge:
+                            self.g.add_edge(selected_room, room_exists)
+                else:
+                    new_room = Room(self.img, selected_room.x, ry, self.cell_size)
+                    self.g.add_vertex(new_room)
+                    self.g.add_edge(selected_room, new_room)
+                    
+            # can place room only to the LEFT (right wall)
+            elif selected_room.y - 1 >= 0 and selected_room.y + 1 > selected_room.boundary_max:
+                _y = -1
+                ry = selected_room.y + _y
+                room_exists = self.g.get_room_by_coord(selected_room.x, ry)
+                if room_exists:
+                    # check for EDGE:
+                    if self.g.check_edge(room_exists, selected_room) is False:
+                        # create an edge randomly
+                        edge = random.choice(True, False)
+                        if edge:
+                            self.g.add_edge(selected_room, room_exists)
+                else:
+                    new_room = Room(self.img, selected_room.x, ry, self.cell_size)
+                    self.g.add_vertex(new_room)
+                    self.g.add_edge(selected_room, new_room)
+                    
+                    
 
 
     def choose_random_room(self):

@@ -9,6 +9,12 @@ class UndirectedGraph:
     @property
     def get_rooms(self):
         return self._adjacency_list
+    
+    def get_room_by_coord(self, room_x, room_y):
+        for room in list(self._adjacency_list.keys()):
+            if room_x == room.x and room_y == room.y:
+                return room
+        return None
 
 
     def add_vertex(self, vertex):
