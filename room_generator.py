@@ -32,7 +32,7 @@ class RoomGenerator:
             max_limit_edges += room.max_edges
         
         for list_of_edges in self.g.get_rooms.values():
-            current_edges_number += sum(list_of_edges)
+            current_edges_number += len(list_of_edges)
                       
         if current_edges_number == max_limit_edges:
             print("Cannot create new room because the number of rooms equals to overall rooms.")
@@ -58,19 +58,22 @@ class RoomGenerator:
                 break
             
         room_exists = self.g.get_room_by_coord(new_room_x, new_room_y)
-        if room_exists: # check if no room (connected or not) to the left or right
-            # check for EDGE:
-            if self.g.check_edge(room_exists, selected_room) is False:
-                # create an edge randomly
-                edge = random.choice([True, False])
-                if edge:
-                    self.g.add_edge(selected_room, room_exists)
-       
+        if room_exists:
+            self.place_random_edge(room_exists, selected_room)
+            self.place_next_room()
         else:
             new_room = Room(self.img, new_room_x, new_room_y, self.cell_size)
             self.g.add_vertex(new_room)
             self.g.add_edge(selected_room, new_room)
-          
+    
+    def place_random_edge(self, room1, room2):
+        # check for EDGE:
+        if self.g.check_edge(room1, room2) is False:
+            # create an edge randomly
+            edge = random.choice([True, False])
+            if edge:
+                self.g.add_edge(room1, room2)
+        
     
     def new_room_coords(self, room):
         x,y = random.choice([(-1, 0),(1, 0), (0, 1), (0, -1)])
@@ -102,5 +105,5 @@ class RoomGenerator:
 
 
     def create_rooms(self):
-        for _ in range(self.rooms_number):  # 10-1 + start room = 10
+        for _ in range(1, self.rooms_number):  # 10-1 + start room = 10
             self.place_next_room()

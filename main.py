@@ -11,7 +11,7 @@ def main():
     new_img = NewImage()
     rows_cols=new_img._rows_cols    
     cell_size = new_img._cell_size
-    rooms_number = 100
+    rooms_number = 10
     
     coord_store = CoordinateStore(new_img, rows_cols)
     g = UndirectedGraph()
