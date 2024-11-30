@@ -8,7 +8,7 @@ class RoomGenerator:
     
     
     def __init__(self, rooms_number: int, img: NewImage, graph: UndirectedGraph, cell_size):
-        self.rn = rooms_number
+        self.rooms_number = rooms_number
         self.g = graph
         self.img = img
         self.cell_size = cell_size
@@ -26,7 +26,17 @@ class RoomGenerator:
         
         
     def place_next_room(self):
-        selected_room = self.choose_random_room()
+        selected_room = self.choose_random_room()   
+        walls_coords = self.get_walls_coords(selected_room)
+        new_room_x, new_room_y = self.new_room_coords(selected_room)
+        
+        while True:
+            if (new_room_x, new_room_y) in walls_coords:
+                new_room_x, new_room_y = self.new_room_coords(selected_room)
+            else:
+                break
+            
+        
         coord = random.choice(['x', 'y'])
         if coord == 'x':
             _x = random.choice([-1, 1])
@@ -128,15 +138,40 @@ class RoomGenerator:
                     new_room = Room(self.img, selected_room.x, ry, self.cell_size)
                     self.g.add_vertex(new_room)
                     self.g.add_edge(selected_room, new_room)
+                   
+                   
+    def new_room_coords(self, room):
+        x,y = random.choice([(-1, 0),(1, 0), (0, 1), (0, -1)])
+        return room.x+x, room.y+y
                     
-                    
-
+    def get_walls_coords(self, room):
+        _keys = ['left','right','top', 'bottom']
+        walls_coords = dict.fromkeys(_keys, None)
+        
+        if room.x - 1 < 0:
+            walls_coords['left'] = (room.x - 1, room.y)
+        if room.x + 1 > room.boundary_max:
+            walls_coords['right'] = (room.x + 1, room.y)
+        if room.y - 1 < 0:
+            walls_coords['top'] = (room.x, room.y - 1)
+        if room.y + 1 > room.boundary_max:
+            walls_coords['bottom'] = (room.x, room.y + 1)
+        return [x for x in walls_coords.values() if x is not None]
+            
+        
 
     def choose_random_room(self):
-        # base case
+        rooms_overall = list(self.g.get_rooms.keys())
+        if len(rooms_overall) == self.rooms_number:
+            raise SystemExit("Cannot create new room because the number of rooms equals to overall rooms.")
         
-        room = random.choice(list(self.g.get_rooms.keys()))
+        room = random.choice(rooms_overall)
         if len(self.g._adjacency_list[room]) >= room.max_edges:
             return self.choose_random_room()
                     
         return room
+
+
+    def create_rooms(self):
+        for n in range(self.rooms_number):  # 10-1 + start room = 10
+            self.place_next_room()

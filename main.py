@@ -11,18 +11,15 @@ def main():
     new_img = NewImage()
     rows_cols=new_img._rows_cols    
     cell_size = new_img._cell_size
-    rooms_numbers = 10
+    rooms_number = 100
     
     coord_store = CoordinateStore(new_img, rows_cols)
     g = UndirectedGraph()
-    generator = RoomGenerator(8, new_img, g, cell_size)
+    generator = RoomGenerator(rooms_number, new_img, g, cell_size)
     
     generator.create_first_room()
-    generator.choose_random_room()
-    
-    for n in range(rooms_numbers+1):   
-        generator.place_next_room()
-    
+    generator.create_rooms()
+
         
     rooms = list(g.get_rooms.keys())
     draw_manager = DrawManager()
