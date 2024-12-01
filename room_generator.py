@@ -80,18 +80,17 @@ class RoomGenerator:
         return room.x+x, room.y+y
                     
     def get_walls_coords(self, room):
-        _keys = ['left','right','top', 'bottom']
-        walls_coords = dict.fromkeys(_keys, None)
+        walls_coords = []
         
         if room.x - 1 < 0:
-            walls_coords['left'] = (room.x - 1, room.y)
+            walls_coords.append((room.x - 1, room.y))
         if room.x + 1 > room.boundary_max:
-            walls_coords['right'] = (room.x + 1, room.y)
+            walls_coords.append((room.x + 1, room.y))
         if room.y - 1 < 0:
-            walls_coords['top'] = (room.x, room.y - 1)
+            walls_coords.append((room.x, room.y - 1))
         if room.y + 1 > room.boundary_max:
-            walls_coords['bottom'] = (room.x, room.y + 1)
-        return [x for x in walls_coords.values() if x is not None]
+            walls_coords.append((room.x, room.y + 1))
+        return walls_coords
             
         
 
