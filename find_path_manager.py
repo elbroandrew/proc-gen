@@ -13,7 +13,6 @@ class PathManager:
             self.coord_store.click_event(x, y)
             # find path with BFS
             self.g = param["graph"]
-            rooms = list(self.g.get_rooms.keys())
             current_room = param["current_room"]
             target_room = self.g.get_room_by_coord(*self.coord_store.room_coords)
             path = self.g.bfs_find_path(current_room, target_room)
@@ -22,3 +21,9 @@ class PathManager:
             else:
                 for r in path:
                     print(r.id)
+                param["current_room"] = target_room
+                print("current_room: ",param["current_room"].id)
+
+                    
+                    
+    

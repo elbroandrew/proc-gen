@@ -27,11 +27,11 @@ def main():
     draw_manager.draw_rooms(rooms)
     draw_manager.draw_grid(new_img, rows_cols, rows_cols)
     
-    current_room = g.root
     param = {
         "graph": g,
-        "current_room": current_room
+        "current_room": g.root
     }
+    print("current_room: ",param["current_room"].id)
         
     
     cv.imshow("image", new_img._img)

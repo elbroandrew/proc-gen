@@ -7,12 +7,11 @@ class CoordinateStore:
         self.img=img._img
         self.rc = rows_cols
         self.room_coords = (0, 0)
-        self.graph = None
             
 
     def click_event(self, x, y, ):
-        dx, dy = self.converted_coords(self.rc, self.rc, x, y)
-        self.room_coords = dx, dy
+        rx, ry = self.converted_coords(self.rc, self.rc, x, y)
+        self.room_coords = rx, ry
         print(self.room_coords)
             
             
