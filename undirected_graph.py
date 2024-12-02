@@ -84,7 +84,7 @@ class UndirectedGraph:
 
     def bfs(self, start):
         # using list as queue
-        q = list(start)
+        q = [start]
         visited = {start: True}
         result = []
 
@@ -95,5 +95,30 @@ class UndirectedGraph:
                 if not n in visited.keys():
                     visited[n] = True
                     q.append(n)
-
+                    # result[n] = v
         return result
+                    
+    def bfs_find_path(self, start, target):
+        if target is None:
+            print("Target room does not exist.")
+            return None
+        q = [(start, [])]
+        visited = {start: True}
+
+        while q:
+            node, path = q.pop(0)
+            path.append(node)
+            if node == target:
+                return path
+                
+            for n in self._adjacency_list[node]:
+                if not n in visited.keys():
+                    visited[n] = True
+                    q.append((n, path[:]))
+
+        return None
+
+    def mouse_click_create_path(self, coord_store, target_room):
+        pass
+        
+        

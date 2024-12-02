@@ -27,6 +27,18 @@ def main():
     draw_manager.draw_rooms(rooms)
     draw_manager.draw_grid(new_img, rows_cols, rows_cols)
     
+    # find path with BFS
+    print("PATH 0, 8:")
+    rooms2 = list(g.get_rooms.keys())
+    current_room = g.root
+    target_room = g.get_room_by_coord(*coord_store.room_coords)
+    path = g.bfs_find_path(current_room, target_room)
+    if path is None:
+        print("No path.")
+    else:
+        for r in path:
+            print(r.id)
+        
     
     cv.imshow("image", new_img._img)
     

@@ -7,12 +7,15 @@ class CoordinateStore:
         self.points=[]
         self.img=img._img
         self.rc = rows_cols
+        self.room_coords = (0, 0)
             
 
     def click_event(self, event, x, y, flags, params):
         if event == cv.EVENT_LBUTTONDOWN:
             dx, dy = self.converted_coords(self.rc, self.rc, x, y)
-            print(dx, dy)
+            self.room_coords = dx, dy
+            print(self.room_coords)
+            
             
     def converted_coords(self, rows, cols, xx, yy):
         h, w, _ = self.img.shape
