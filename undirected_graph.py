@@ -95,8 +95,9 @@ class UndirectedGraph:
                 if not n in visited.keys():
                     visited[n] = True
                     q.append(n)
-                    # result[n] = v
+                    # result[n] = v  # placing 'result' here will exclude the first room in the 'path' list.
         return result
+                    
                     
     def bfs_find_path(self, start, target):
         if target is None:
@@ -118,7 +119,5 @@ class UndirectedGraph:
 
         return None
 
-    def mouse_click_create_path(self, coord_store, target_room):
-        pass
-        
+#TODO: C#: remake finding path part. Get rid of CoordStore class, and native opencv click event.
         
