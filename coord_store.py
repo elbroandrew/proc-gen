@@ -4,17 +4,17 @@ from math import floor
 class CoordinateStore:
     
     def __init__(self, img, rows_cols):
-        self.points=[]
         self.img=img._img
         self.rc = rows_cols
         self.room_coords = (0, 0)
+        self.graph = None
             
 
-    def click_event(self, event, x, y, flags, params):
-        if event == cv.EVENT_LBUTTONDOWN:
-            dx, dy = self.converted_coords(self.rc, self.rc, x, y)
-            self.room_coords = dx, dy
-            print(self.room_coords)
+    def click_event(self, x, y, ):
+        dx, dy = self.converted_coords(self.rc, self.rc, x, y)
+        self.room_coords = dx, dy
+        print(self.room_coords)
+            
             
             
     def converted_coords(self, rows, cols, xx, yy):

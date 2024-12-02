@@ -1,9 +1,9 @@
 import cv2 as cv
-from coord_store import CoordinateStore
 from undirected_graph import UndirectedGraph
 from image import NewImage
 from room_generator import RoomGenerator
 from draw_manager import DrawManager
+from find_path_manager import PathManager
 
         
 
@@ -13,7 +13,7 @@ def main():
     cell_size = new_img._cell_size
     rooms_number = 10
     
-    coord_store = CoordinateStore(new_img, rows_cols)
+    path_manager = PathManager(new_img, rows_cols)
     g = UndirectedGraph()
     generator = RoomGenerator(rooms_number, new_img, g, cell_size)
     
@@ -27,17 +27,11 @@ def main():
     draw_manager.draw_rooms(rooms)
     draw_manager.draw_grid(new_img, rows_cols, rows_cols)
     
-    # find path with BFS
-    print("PATH 0, 8:")
-    rooms2 = list(g.get_rooms.keys())
     current_room = g.root
-    target_room = g.get_room_by_coord(*coord_store.room_coords)
-    path = g.bfs_find_path(current_room, target_room)
-    if path is None:
-        print("No path.")
-    else:
-        for r in path:
-            print(r.id)
+    param = {
+        "graph": g,
+        "current_room": current_room
+    }
         
     
     cv.imshow("image", new_img._img)
@@ -45,7 +39,7 @@ def main():
     
     # setting mouse handler for the image 
     # and calling the click_event() function
-    cv.setMouseCallback('image', coord_store.click_event)
+    cv.setMouseCallback('image', path_manager.find_path, param=param)
     
     cv.waitKey(0)
     cv.destroyAllWindows()
