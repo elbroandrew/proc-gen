@@ -119,5 +119,5 @@ class UndirectedGraph:
 
         return None
 
-#TODO: C#: remake finding path part. Get rid of CoordStore class, and native opencv click event.
+
         

@@ -11,7 +11,7 @@ def main():
     new_img = NewImage()
     rows_cols=new_img._rows_cols    
     cell_size = new_img._cell_size
-    rooms_number = 10
+    rooms_number = 20
     draw_manager = DrawManager(new_img, new_img._cell_size)
     path_manager = PathManager(new_img, rows_cols, draw_manager)
     g = UndirectedGraph()
@@ -22,10 +22,9 @@ def main():
 
         
     rooms = list(g.get_rooms.keys())
-    
-    draw_manager.draw_corridors(g.get_rooms)
-    draw_manager.draw_rooms(rooms)
     draw_manager.draw_grid(rows_cols, rows_cols)
+    draw_manager.draw_rooms(rooms)
+    draw_manager.draw_corridors(g.get_rooms)
     
     param = {
         "graph": g,
