@@ -18,10 +18,12 @@ class RoomGenerator:
         self.edges = {}
     
     
-    def create_first_room(self) -> None:
+    def create_start_room(self) -> None:
         x,y = tuple(random.randint(self.x, self.y) for _ in range(2))
         start_room = Room(self.img, x, y, self.cell_size)
+        start_room.hidden = False
         self.g.add_vertex(start_room)
+        return start_room
 
     def allow_to_place(self):
         

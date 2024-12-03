@@ -7,20 +7,20 @@ class DrawManager:
     def __init__(self, img, cell_size):
         self.img = img
         self.s=int(cell_size)
-        self.gen = self.write_image_generator()
+        # self.gen = self.write_image_generator()
      
     def draw_rooms(self, rooms):
         
         for room in rooms:
             room.draw()
-            next(self.gen)
+            # next(self.gen)
         
         
     def draw_corridors(self, adj_list: dict, length=10):
     # the corridor connects exactly only 2 rooms
     
         thickness=3
-        color = (200, 200, 200)
+        color = (70, 150, 150)
         
         
         for room1 in adj_list.keys():
@@ -36,18 +36,18 @@ class DrawManager:
                     # draw vertical
                     if room2.y > room1.y:
                         cv.rectangle(self.img._img, (cx, cy+length), (cx, cy+self.s-length), color, thickness)  # S
-                        next(self.gen)
+                        # next(self.gen)
                     else:
                         cv.rectangle(self.img._img, (cx, cy-length), (cx, cy-self.s+length), color, thickness)  # N
-                        next(self.gen)
+                        # next(self.gen)
                 if room1.y == room2.y:
                     # draw horizontal
                     if room2.x > room1.x:
                         cv.rectangle(self.img._img, (cx+length, cy), (cx+self.s-length, cy), color, thickness)  # E
-                        next(self.gen)
+                        # next(self.gen)
                     else:
                         cv.rectangle(self.img._img, (cx-length, cy), (cx-self.s+length, cy), color, thickness)  # W
-                        next(self.gen)
+                        # next(self.gen)
     
     
     def draw_grid(self, rows, cols, color=(255,255,0), thickness=1):
@@ -58,13 +58,13 @@ class DrawManager:
         for x in np.linspace(start=dx, stop=w-dx, num=cols-1):
             x=int(round(x))
             cv.line(self.img._img, (x,0), (x,h), color=color, thickness=thickness)
-        next(self.gen)
+        # next(self.gen)
             
         # draw horizontal lines
         for y in np.linspace(start=dy, stop=h-dy, num=rows-1):
             y = int(round(y))
             cv.line(self.img._img, (0, y), (w, y), color=color, thickness=thickness)
-        next(self.gen)
+        # next(self.gen)
             
     def draw_path(self, path):
         if path is None:
@@ -81,25 +81,46 @@ class DrawManager:
                 # draw vertical
                 if path[i+1].y > path[i].y:
                     cv.rectangle(self.img._img, (cx, cy), (cx, cy+self.s), color, thickness)  # S
-                    next(self.gen)
+                    # next(self.gen)
                 else:
                     cv.rectangle(self.img._img, (cx, cy), (cx, cy-self.s), color, thickness)  # N
-                    next(self.gen)
+                    # next(self.gen)
             if path[i].y == path[i+1].y:
                 # draw horizontal
                 if path[i+1].x > path[i].x:
                     cv.rectangle(self.img._img, (cx, cy), (cx+self.s, cy), color, thickness)  # E
-                    next(self.gen)
+                    # next(self.gen)
                 else:
                     cv.rectangle(self.img._img, (cx, cy), (cx-self.s, cy), color, thickness)  # W
-                    next(self.gen)
+                    # next(self.gen)
             i += 1
 
     
     def write_image_generator(self):
         n = 0
         while True:
-            print("n", n)
             cv.imwrite(f"output/{n}.png", self.img._img)
             n += 1
             yield
+            
+    def dark_regions_create(self, adj_list):
+        rooms = list(adj_list.keys())
+        for room in rooms:
+            if room.hidden is True:
+                self.create_region(room.x, room.y)
+            
+    def create_region(self, x, y):
+        xx = x * self.s
+        yy = y * self.s
+        black = (0,0,0)
+        filled = -1
+        cv.rectangle(self.img._img, (xx+2, yy+2), (xx+self.s-2, yy+self.s-2), black, filled)
+        
+    def draw_player(self, player):
+        xx = player.x * self.s + self.s//2
+        yy = player.y * self.s + self.s//2
+        
+        filled = 2
+        radius = 8
+        cv.circle(self.img._img, (xx, yy), radius, (250, 0, 0), filled)
+        

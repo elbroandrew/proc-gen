@@ -23,6 +23,7 @@ class Room:
         self.s=int(cell_size)
         self.xx = self.x * self.s
         self.yy = self.y * self.s
+        self.hidden = True
 
         
     def draw(self):
