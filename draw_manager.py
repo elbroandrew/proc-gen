@@ -81,14 +81,18 @@ class DrawManager:
                 # draw vertical
                 if path[i+1].y > path[i].y:
                     cv.rectangle(self.img._img, (cx, cy), (cx, cy+self.s), color, thickness)  # S
+                    next(self.gen)
                 else:
                     cv.rectangle(self.img._img, (cx, cy), (cx, cy-self.s), color, thickness)  # N
+                    next(self.gen)
             if path[i].y == path[i+1].y:
                 # draw horizontal
                 if path[i+1].x > path[i].x:
                     cv.rectangle(self.img._img, (cx, cy), (cx+self.s, cy), color, thickness)  # E
+                    next(self.gen)
                 else:
                     cv.rectangle(self.img._img, (cx, cy), (cx-self.s, cy), color, thickness)  # W
+                    next(self.gen)
             i += 1
 
     
