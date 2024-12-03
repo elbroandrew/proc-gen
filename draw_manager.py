@@ -103,24 +103,3 @@ class DrawManager:
             n += 1
             yield
             
-    def dark_regions_create(self, adj_list):
-        rooms = list(adj_list.keys())
-        for room in rooms:
-            if room.hidden is True:
-                self.create_region(room.x, room.y)
-            
-    def create_region(self, x, y):
-        xx = x * self.s
-        yy = y * self.s
-        black = (0,0,0)
-        filled = -1
-        cv.rectangle(self.img._img, (xx+2, yy+2), (xx+self.s-2, yy+self.s-2), black, filled)
-        
-    def draw_player(self, player):
-        xx = player.x * self.s + self.s//2
-        yy = player.y * self.s + self.s//2
-        
-        filled = 2
-        radius = 8
-        cv.circle(self.img._img, (xx, yy), radius, (250, 0, 0), filled)
-        

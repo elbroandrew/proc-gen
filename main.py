@@ -4,7 +4,6 @@ from image import NewImage
 from room_generator import RoomGenerator
 from draw_manager import DrawManager
 from find_path_manager import PathManager
-from player_manager import Player
 
         
 
@@ -18,17 +17,13 @@ def main():
     g = UndirectedGraph()
     generator = RoomGenerator(rooms_number, new_img, g, cell_size)
     
-    start_room = generator.create_start_room()
+    generator.create_start_room()
     generator.create_rooms()
-    # create_palyer
-    player = Player(start_room.x, start_room.y)
         
     rooms = list(g.get_rooms.keys())
     draw_manager.draw_grid(rows_cols, rows_cols)
     draw_manager.draw_rooms(rooms)
     draw_manager.draw_corridors(g.get_rooms)
-    draw_manager.dark_regions_create(g._adjacency_list)
-    draw_manager.draw_player(player)
     
     param = {
         "graph": g,
@@ -46,6 +41,7 @@ def main():
     
     cv.waitKey(0)
     cv.destroyAllWindows()
+    
 
 if __name__ == "__main__":
     main()

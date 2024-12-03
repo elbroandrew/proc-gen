@@ -23,7 +23,6 @@ class RoomGenerator:
         start_room = Room(self.img, x, y, self.cell_size)
         start_room.hidden = False
         self.g.add_vertex(start_room)
-        return start_room
 
     def allow_to_place(self):
         
